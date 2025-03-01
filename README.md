@@ -243,8 +243,8 @@ The POS system can be extended in several ways:
 ### Support
 
 For technical support, please contact:
-- Email: support@bakerypos.example.com
-- Documentation: https://github.com/yourusername/bakery-pos/wiki
+- Email: edgardopuentes406@hotmail.com
+- Documentation: https://github.com/kiketracks40/Bakery-shop
 
 ## License
 
