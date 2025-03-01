@@ -27,49 +27,42 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = '__all__' 
 
 class SaleCreateSerializer(serializers.ModelSerializer):
-    items = serializers.ListField(
-        child=serializers.DictField(), 
-        write_only=True
-    )
+    items = serializers.ListField(child=serializers.DictField(), write_only=True)
     
     class Meta:
         model = Sale
-        fields = ['payment_method', 'items']
+        fields = ['payment_method', 'items']  # Only fields from the request
     
     def create(self, validated_data):
         items_data = validated_data.pop('items')
-        # Set cashier to current user
-        validated_data['cashier'] = self.context['request'].user
-        # Calculate total from items
+        
+        # Create sale with required fields
+        sale = Sale.objects.create(
+            payment_method=validated_data['payment_method'],
+            cashier=self.context['request'].user,
+            total=0  # Initial total, will update later
+        )
+        
+        # Process items and update total
         total = 0
-        
-        # Create the sale with initial total
-        validated_data['total'] = total
-        sale = Sale.objects.create(**validated_data)
-        
-        # Create each sale item and update total
         for item_data in items_data:
             product = Product.objects.get(pk=item_data['product_id'])
             quantity = item_data['quantity']
-            price = product.price
             
             SaleItem.objects.create(
                 sale=sale,
                 product=product,
                 quantity=quantity,
-                price=price
+                price=product.price
             )
             
-            # Update product quantity
+            # Update total and inventory
+            total += product.price * quantity
             product.quantity -= quantity
             product.save()
-            
-            # Add to total
-            total += price * quantity
         
-        # Update sale with correct total
+        # Update final total
         sale.total = total
         sale.save()
         
         return sale
-    

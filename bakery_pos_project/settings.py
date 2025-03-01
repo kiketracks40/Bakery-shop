@@ -40,7 +40,24 @@ INSTALLED_APPS = [
     'rest_framework',  # Add Django REST framework
     'bakery_shop',     # Your renamed app
     'bakery',
+    'bakery_pos_project',
+
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        
+    ],
+
+     'NON_FIELD_ERRORS_KEY': 'error',
+     'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+     'DEFAULT_CONTENT_NEGOTIATION_CLASS': 'rest_framework.negotiation.DefaultContentNegotiation',
+}
+
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

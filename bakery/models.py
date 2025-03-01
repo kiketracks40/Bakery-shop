@@ -9,14 +9,15 @@ class Product(models.Model):
     category = models.CharField(max_length=50)
     quantity = models.PositiveIntegerField(default=0)
     alert_threshold = models.PositiveIntegerField(default=5)
+    active = models.BooleanField(default=True)
     
     def __str__(self):
         return self.name
 
 class Sale(models.Model):
     PAYMENT_CHOICES = [
-        ('CASH', 'Efectivo'),
-        ('CARD', 'Transferencia'),
+        ('CASH', 'cash'),
+        ('CARD', 'card'),
     ]
     
     date_time = models.DateTimeField(auto_now_add=True)
